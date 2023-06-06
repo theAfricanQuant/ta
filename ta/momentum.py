@@ -99,7 +99,7 @@ def money_flow_index(high, low, close, volume, n=14, fillna=False):
     if fillna:
         mr = mr.replace([np.inf, -np.inf], np.nan).fillna(50)
 
-    return pd.Series(mr, name='mfi_'+str(n))
+    return pd.Series(mr, name=f'mfi_{str(n)}')
 
 
 def tsi(close, r=25, s=13, fillna=False):
@@ -366,12 +366,11 @@ def kama(close, n=10, pow1=2, pow2=30, fillna=False):
     for i in range(N):
         if np.isnan(sc[i]):
             kama[i] = np.nan
+        elif first_value:
+            kama[i] = close_values[i]
+            first_value = False
         else:
-            if first_value:
-                kama[i] = close_values[i]
-                first_value = False
-            else:
-                kama[i] = kama[i-1] + sc[i] * (close_values[i] - kama[i-1])
+            kama[i] = kama[i-1] + sc[i] * (close_values[i] - kama[i-1])
 
     kama = pd.Series(kama, name='kama', index=close.index)
 

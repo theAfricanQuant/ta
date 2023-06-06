@@ -141,7 +141,7 @@ def adx(high, low, close, n=14, fillna=False):
 
     trs_initial = np.zeros(n-1)
     trs = np.zeros(len(close) - (n - 1))
-    trs[0] = tr.dropna()[0:n].sum()
+    trs[0] = tr.dropna()[:n].sum()
     tr = tr.reset_index(drop=True)
     for i in range(1, len(trs)-1):
         trs[i] = trs[i-1] - (trs[i-1]/float(n)) + tr[n+i]
@@ -152,14 +152,14 @@ def adx(high, low, close, n=14, fillna=False):
     neg = abs(((dn > up) & (dn > 0)) * dn)
 
     dip_mio = np.zeros(len(close) - (n - 1))
-    dip_mio[0] = pos.dropna()[0:n].sum()
+    dip_mio[0] = pos.dropna()[:n].sum()
 
     pos = pos.reset_index(drop=True)
     for i in range(1, len(dip_mio)-1):
         dip_mio[i] = dip_mio[i-1] - (dip_mio[i-1]/float(n)) + pos[n+i]
 
     din_mio = np.zeros(len(close) - (n - 1))
-    din_mio[0] = neg.dropna()[0:n].sum()
+    din_mio[0] = neg.dropna()[:n].sum()
 
     neg = neg.reset_index(drop=True)
     for i in range(1, len(din_mio)-1):
@@ -176,7 +176,7 @@ def adx(high, low, close, n=14, fillna=False):
     dx = 100 * np.abs((dip - din) / (dip + din))
 
     adx = np.zeros(len(trs))
-    adx[n] = dx[0:n].mean()
+    adx[n] = dx[:n].mean()
 
     for i in range(n+1, len(adx)):
         adx[i] = ((adx[i-1] * (n - 1)) + dx[i-1]) / float(n)
@@ -223,7 +223,7 @@ def adx_pos(high, low, close, n=14, fillna=False):
 
     trs_initial = np.zeros(n-1)
     trs = np.zeros(len(close) - (n - 1))
-    trs[0] = tr.dropna()[0:n].sum()
+    trs[0] = tr.dropna()[:n].sum()
     tr = tr.reset_index(drop=True)
     for i in range(1, len(trs)-1):
         trs[i] = trs[i-1] - (trs[i-1]/float(n)) + tr[n+i]
@@ -234,7 +234,7 @@ def adx_pos(high, low, close, n=14, fillna=False):
     neg = abs(((dn > up) & (dn > 0)) * dn)
 
     dip_mio = np.zeros(len(close) - (n - 1))
-    dip_mio[0] = pos.dropna()[0:n].sum()
+    dip_mio[0] = pos.dropna()[:n].sum()
 
     pos = pos.reset_index(drop=True)
     for i in range(1, len(dip_mio)-1):
@@ -285,7 +285,7 @@ def adx_neg(high, low, close, n=14, fillna=False):
 
     trs_initial = np.zeros(n-1)
     trs = np.zeros(len(close) - (n - 1))
-    trs[0] = tr.dropna()[0:n].sum()
+    trs[0] = tr.dropna()[:n].sum()
     tr = tr.reset_index(drop=True)
     for i in range(1, len(trs)-1):
         trs[i] = trs[i-1] - (trs[i-1]/float(n)) + tr[n+i]
@@ -296,7 +296,7 @@ def adx_neg(high, low, close, n=14, fillna=False):
     neg = abs(((dn > up) & (dn > 0)) * dn)
 
     din_mio = np.zeros(len(close) - (n - 1))
-    din_mio[0] = neg.dropna()[0:n].sum()
+    din_mio[0] = neg.dropna()[:n].sum()
 
     neg = neg.reset_index(drop=True)
     for i in range(1, len(din_mio)-1):
@@ -399,7 +399,7 @@ def trix(close, n=15, fillna=False):
     trix *= 100
     if fillna:
         trix = trix.replace([np.inf, -np.inf], np.nan).fillna(0)
-    return pd.Series(trix, name='trix_'+str(n))
+    return pd.Series(trix, name=f'trix_{str(n)}')
 
 
 def mass_index(high, low, n=9, n2=25, fillna=False):
@@ -429,7 +429,7 @@ def mass_index(high, low, n=9, n2=25, fillna=False):
     mass = mass.rolling(n2, min_periods=0).sum()
     if fillna:
         mass = mass.replace([np.inf, -np.inf], np.nan).fillna(n2)
-    return pd.Series(mass, name='mass_index_'+str(n))
+    return pd.Series(mass, name=f'mass_index_{str(n)}')
 
 
 def cci(high, low, close, n=20, c=0.015, fillna=False):
@@ -483,7 +483,7 @@ def dpo(close, n=20, fillna=False):
     dpo = close.shift(int((0.5 * n) + 1), fill_value=close.mean()) - close.rolling(n, min_periods=0).mean()
     if fillna:
         dpo = dpo.replace([np.inf, -np.inf], np.nan).fillna(0)
-    return pd.Series(dpo, name='dpo_'+str(n))
+    return pd.Series(dpo, name=f'dpo_{str(n)}')
 
 
 def kst(close, r1=10, r2=15, r3=20, r4=30, n1=10, n2=10, n3=10, n4=15, fillna=False):
@@ -594,7 +594,7 @@ def ichimoku_a(high, low, n1=9, n2=26, visual=False, fillna=False):
     if fillna:
         spana = spana.replace([np.inf, -np.inf], np.nan).fillna(method='backfill')
 
-    return pd.Series(spana, name='ichimoku_a_'+str(n2))
+    return pd.Series(spana, name=f'ichimoku_a_{str(n2)}')
 
 
 def ichimoku_b(high, low, n2=26, n3=52, visual=False, fillna=False):
@@ -622,7 +622,7 @@ def ichimoku_b(high, low, n2=26, n3=52, visual=False, fillna=False):
     if fillna:
         spanb = spanb.replace([np.inf, -np.inf], np.nan).fillna(method='backfill')
 
-    return pd.Series(spanb, name='ichimoku_b_'+str(n2))
+    return pd.Series(spanb, name=f'ichimoku_b_{str(n2)}')
 
 
 def aroon_up(close, n=25, fillna=False):
@@ -645,7 +645,7 @@ def aroon_up(close, n=25, fillna=False):
     aroon_up = close.rolling(n, min_periods=0).apply(lambda x: float(np.argmax(x) + 1) / n * 100, raw=True)
     if fillna:
         aroon_up = aroon_up.replace([np.inf, -np.inf], np.nan).fillna(0)
-    return pd.Series(aroon_up, name='aroon_up'+str(n))
+    return pd.Series(aroon_up, name=f'aroon_up{str(n)}')
 
 
 def aroon_down(close, n=25, fillna=False):
@@ -667,4 +667,4 @@ def aroon_down(close, n=25, fillna=False):
     aroon_down = close.rolling(n, min_periods=0).apply(lambda x: float(np.argmin(x) + 1) / n * 100, raw=True)
     if fillna:
         aroon_down = aroon_down.replace([np.inf, -np.inf], np.nan).fillna(0)
-    return pd.Series(aroon_down, name='aroon_down'+str(n))
+    return pd.Series(aroon_down, name=f'aroon_down{str(n)}')

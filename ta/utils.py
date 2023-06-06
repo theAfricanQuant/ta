@@ -10,8 +10,7 @@ def dropna(df):
     """
     df = df[df < math.exp(709)]  # big number
     df = df[df != 0.0]
-    df = df.dropna()
-    return df
+    return df.dropna()
 
 
 def ema(series, periods, fillna=False):
@@ -21,12 +20,11 @@ def ema(series, periods, fillna=False):
 
 
 def get_min_max(x1, x2, f='min'):
-    if not np.isnan(x1) and not np.isnan(x2):
-        if f == 'max':
-            return max(x1, x2)
-        elif f == 'min':
-            return min(x1, x2)
-        else:
-            raise ValueError('"f" variable value should be "min" or "max"')
-    else:
+    if np.isnan(x1) or np.isnan(x2):
         return np.nan
+    if f == 'max':
+        return max(x1, x2)
+    elif f == 'min':
+        return min(x1, x2)
+    else:
+        raise ValueError('"f" variable value should be "min" or "max"')

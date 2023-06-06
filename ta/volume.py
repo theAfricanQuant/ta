@@ -116,7 +116,7 @@ def force_index(close, volume, n=2, fillna=False):
     fi = close.diff(n) * volume.diff(n)
     if fillna:
         fi = fi.replace([np.inf, -np.inf], np.nan).fillna(0)
-    return pd.Series(fi, name='fi_'+str(n))
+    return pd.Series(fi, name=f'fi_{str(n)}')
 
 
 def ease_of_movement(high, low, close, volume, n=20, fillna=False):
@@ -142,7 +142,7 @@ def ease_of_movement(high, low, close, volume, n=20, fillna=False):
     emv = emv.rolling(n, min_periods=0).mean()
     if fillna:
         emv = emv.replace([np.inf, -np.inf], np.nan).fillna(0)
-    return pd.Series(emv, name='eom_' + str(n))
+    return pd.Series(emv, name=f'eom_{str(n)}')
 
 
 def volume_price_trend(close, volume, fillna=False):
